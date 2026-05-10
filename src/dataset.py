@@ -22,6 +22,7 @@ class WakewordAudioDataset(Dataset):
                  sample_rate=16000,
                  clip_seconds=1.0, #can change depending on wake word
                  augment=True,
+                 #can add extra noise directory, but in this case i added it in train and val dataset already
                  noise_dir=None):
         self.sample_rate = sample_rate
         self.clip_len = int(sample_rate * clip_seconds)

@@ -1,5 +1,6 @@
 torch<3.0,>=2.1
 torchaudio<3.0,>=2.1
+pydub
 numpy<3.0,>=1.24
 scipy>=1.10
 soundfile>=0.12
@@ -27,6 +28,7 @@ ruff>=0.5
 black>=24.0
 mypy>=1.8
 ipython>=8.10
+pydub
 
 [notebook]
 jupyterlab>=4.0

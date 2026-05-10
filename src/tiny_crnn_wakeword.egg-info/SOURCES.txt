@@ -1,6 +1,7 @@
 README.md
 pyproject.toml
 src/models/delta_variant_tiny_crnn.py
+src/models/lower_params_crnn.py
 src/models/tiny_crnn.py
 src/tiny_crnn_wakeword.egg-info/PKG-INFO
 src/tiny_crnn_wakeword.egg-info/SOURCES.txt

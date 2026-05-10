@@ -33,3 +33,7 @@ tiny-crnn-wakeword/
 
 ### Option 1: Standard `pip` + venv (simplest)
 ![image.png](attachment:74f25b2d-5cd7-460d-a10c-6a2bd0df49d7:image.png)
+
+Runnning scripts as modules
+
+python -m scripts.data.pipelineswakeword_train_val_split

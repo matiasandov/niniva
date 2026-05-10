@@ -37,6 +37,7 @@ dependencies = [
     # Deep learning
     "torch>=2.1,<3.0",
     "torchaudio>=2.1,<3.0",
+    "pydub",
 
     # Numerics & data
     "numpy>=1.24,<3.0",
@@ -67,6 +68,7 @@ dev = [
     "black>=24.0",
     "mypy>=1.8",
     "ipython>=8.10",
+    "pydub"
 ]
 
 # Experiment tracking / notebooks
