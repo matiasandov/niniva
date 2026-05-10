@@ -10,7 +10,7 @@ name = "tiny-crnn-wakeword"
 version = "0.1.0"
 description = "Tiny-CRNN streaming wakeword detection (PyTorch implementation of Khursheed et al., 2022)"
 readme = "README.md"
-requires-python = ">=3.9,<3.14"
+requires-python = ">=3.10,<3.14"
 license = { text = "MIT" }
 authors = [
     { name = "Your Name", email = "you@example.com" },
@@ -22,7 +22,6 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -53,6 +52,7 @@ dependencies = [
     # Utilities
     "tqdm>=4.65",          # progress bars in training loops
     "pyyaml>=6.0",         # config files
+    "torchcodec (>=0.11.1,<0.12.0)",
 ]
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -92,9 +92,7 @@ deploy = [
 ]
 
 # Convenience meta-extra
-all = [
-    "tiny-crnn-wakeword[dev,notebook,audio-extras,deploy]",
-]
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Project URLs (optional but nice to have)

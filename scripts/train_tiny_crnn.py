@@ -62,13 +62,14 @@ if __name__ == "__main__":
     """
     print("📂 Loading datasets...")
     train_ds = WakewordAudioDataset(
-        root="data/train",
+        root=r"data\wakewords\stop\dataset_split\train",
         sample_rate=16000,
         clip_seconds=1.5,            # ⚠️ longer for "Call 911" — see Part 4
         augment=True,
     )
     val_ds = WakewordAudioDataset(
-        root="data/val", augment=False,
+        root=r"data\wakewords\stop\dataset_split\val",
+        augment=False,
     )
     print(f"✅ Train dataset loaded: {len(train_ds)} samples")
     print(f"✅ Val dataset loaded: {len(val_ds)} samples")

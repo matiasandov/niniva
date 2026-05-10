@@ -51,7 +51,7 @@ def train_tinycrnn(model,
         spec_augment.train()                      # ← enables masking
 
         running_loss, correct, total = 0.0, 0, 0
-        for wav, label in train_loader:
+        for batch_idx, (wav, label) in enumerate(train_loader):
             wav, label = wav.to(device), label.to(device)
 
             feats = feature_extractor(wav)              # (B, 1, 100, n_mels)

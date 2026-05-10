@@ -37,3 +37,10 @@ tiny-crnn-wakeword/
 Runnning scripts as modules
 
 python -m scripts.data.pipelineswakeword_train_val_split
+
+# Poetry
+poetry env activate
+poetry add -
+
+## running a file
+python -m scripts.train_tiny_crnn
