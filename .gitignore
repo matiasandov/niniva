@@ -1,0 +1,12 @@
+.venv/
+
+# =========================
+# Machine Learning / Data
+# =========================
+# Ignore massive model weights and datasets
+*.pt
+*.pth
+*.h5
+*.onnx
+*.safetensors
+data/.venv/
