@@ -9,4 +9,4 @@
 *.h5
 *.onnx
 *.safetensors
-data/
+data/*
