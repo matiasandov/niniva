@@ -44,3 +44,8 @@ poetry add -
 
 ## running a file
 python -m scripts.train_tiny_crnn
+
+# Data
+## Sounds dataset
+slice_file_name,fsID,start,end,salience,fold,classID,class
+100032-3-0-0.wav,100032,0.0,0.317551,1,5,3,dog_bark
