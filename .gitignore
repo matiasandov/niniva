@@ -10,4 +10,4 @@
 *.onnx
 *.safetensors
 
-data/
+data
