@@ -39,7 +39,9 @@ if __name__ == "__main__":
     # 👇 2. Create a dynamic version name based on the current timestamp 👇
     version = datetime.now().strftime("%Y%m%d_%H%M%S")
     run_name = f"tiny_crnn_v{version}"
-    save_dir = os.path.join("saved_models/wakeword_stop", run_name)
+    
+    ###################### modify for the wake word you want to train on ######################
+    save_dir = os.path.join("saved_models/wakeword", run_name)
     os.makedirs(save_dir, exist_ok=True)
     print(f"\n📁 Created run directory: {save_dir}")
 
