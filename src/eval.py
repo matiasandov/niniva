@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-from torch.compiler import F
+import torch.nn.functional as F  # 👈 Corrected import
 
 
 @torch.no_grad()
@@ -11,7 +11,7 @@ def collect_scores(model, loader, device):
         x = x.to(device)
         prob = F.softmax(model(x), dim=-1)[:, 1]   # P(wakeword)
         scores.append(prob.cpu().numpy())
-        labels.append(y.numpy())
+        labels.append(y.cpu().numpy())             # 👈 Added .cpu() just in case y is on the GPU
     return np.concatenate(scores), np.concatenate(labels)
 
 
