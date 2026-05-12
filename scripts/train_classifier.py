@@ -4,7 +4,7 @@ from datetime import datetime
 import torch
 
 from src.augment import SpecAugment
-from src.dataset import UrbanSoundDataset
+from src.dataset_urban_sound import UrbanSoundDataset
 from src.features import LFBEFeatureExtractor
 from src.models.tiny_crnn import TinyCRNN
 from src.train import train_tinycrnn
@@ -85,8 +85,8 @@ if __name__ == "__main__":
     # ----------------------------------------------------------------------
     # 4. Datasets
     # ----------------------------------------------------------------------
-    DATA_ROOT = r"data\urbansound8k"               # adjust to your path
-    METADATA_CSV = os.path.join(DATA_ROOT, "metadata", "UrbanSound8K.csv")
+    DATA_ROOT = r"data\audio_data\sounds"               # adjust to your path
+    METADATA_CSV = os.path.join(DATA_ROOT, "UrbanSound8K.csv")
 
     print("\n📂 Loading datasets...")
     train_ds = UrbanSoundDataset(

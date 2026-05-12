@@ -100,7 +100,7 @@ def print_directory_tree(directory_path, prefix="", exclude_extensions=None):
 
 # --- Example Usage ---
 # Exclude Python cache files and markdown files
-print_directory_tree('data', exclude_extensions=['.opus', 'md','.venv'])
+print_directory_tree('data', exclude_extensions=['.opus', '.md','.wav' ,'.venv'])
 
 # Example usage:
 #breakdown_files_per_nested_folder('data\wakewords\stop')

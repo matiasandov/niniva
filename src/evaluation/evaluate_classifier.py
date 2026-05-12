@@ -12,7 +12,7 @@ from sklearn.metrics import (
     top_k_accuracy_score,
 )
 
-from src.dataset import UrbanSoundDataset
+from src.dataset_urban_sound import UrbanSoundDataset
 from src.features import LFBEFeatureExtractor
 from src.models.tiny_crnn import TinyCRNN
 
@@ -184,8 +184,8 @@ def evaluate_model(run_dir, data_root, metadata_csv):
 
 
 if __name__ == "__main__":
-    RUN_TO_EVALUATE = r"saved_models\sound_events\tiny_crnn_urbansound_v20260510_181959"
-    DATA_ROOT = r"data\urbansound8k"
-    METADATA_CSV = os.path.join(DATA_ROOT, "metadata", "UrbanSound8K.csv")
+    RUN_TO_EVALUATE = r"saved_models\sound_events\tiny_crnn_urbansound_v20260510_222414"
+    DATA_ROOT = r"data\audio_data\sounds"
+    METADATA_CSV = os.path.join(DATA_ROOT, "UrbanSound8K.csv")
 
     evaluate_model(RUN_TO_EVALUATE, DATA_ROOT, METADATA_CSV)

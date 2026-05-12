@@ -15,7 +15,6 @@ class UrbanSoundDataset(Dataset):
     Expects:
       root/
         metadata.csv          (slice_file_name, fold, classID, class, ...)
-        audio/
           fold1/  *.wav
           fold2/  *.wav
           ...
@@ -32,7 +31,7 @@ class UrbanSoundDataset(Dataset):
                  clip_seconds=4.0,
                  augment=True,
                  noise_dir=None,
-                 audio_subdir="audio"):
+                 audio_subdir=""):
         self.root = root
         self.audio_dir = os.path.join(root, audio_subdir)
         self.sample_rate = sample_rate
