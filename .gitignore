@@ -10,4 +10,16 @@
 *.onnx
 *.safetensors
 
-data
+# Ignore audio files (but include data directory)
+*.mp3
+*.wav
+*.flac
+*.ogg
+*.m4a
+*.aac
+*.wma
+*.opus
+*.cd
+
+# Include data directory (so it's tracked in git)
+!data/
