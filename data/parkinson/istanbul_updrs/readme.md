@@ -1,13 +1,18 @@
+# istanbul_updrs
 Here's a full breakdown of all 29 columns, mapped to your sample row:
 
-# Instances 1040
+path to dataset: data\parkinson\istanbul_updrs\processed_istanbul_updrs_data_scaled.csv
+
+## instances
 
 20 PWP (6 female, 14 male) and 20 healthy individuals (10 female, 10 male) who appealed at the Department of Neurology in Cerrahpasa Faculty of Medicine, Istanbul University. From all subjects, multiple types of sound recordings
 
 ---
 
 **Sample row:**
-`1, 0.728, 0.000037698, 0.353, 0.376, 1.059, 5.864, 0.642, 2.058, 3.18, 7.194, 6.175, 0.951285, 0.066758, 17.403, 195.252, 193.289, 14.773, 159.515, 234.505, 170, 169, 0.005181253, 0.000403494, 2.247, 0, 0, 23, 1`
+
+subject_id,jitter_local,jitter_local_abs,jitter_rap,jitter_ppq5,jitter_ddp,shimmer_local,shimmer_local_db,shimmer_apq3,shimmer_apq5,shimmer_apq11,shimmer_dda,ac,nth,htn,pitch_median,pitch_mean,pitch_std,pitch_min,pitch_max,num_pulses,num_periods,mean_period,std_period,unvoiced_frames_frac,num_voice_breaks,degree_voice_breaks,updrs,class_label,source
+1,-0.6753883691856436,-0.7535966744564015,-0.35450054072780157,-0.48702324960526744,-0.3548351376729896,-0.8412370941447667,-0.9905361863733312,-0.3924038436159505,-0.697428386451291,-0.9002185885664656,-0.3924085240772452,0.6991147704275712,-0.7424268771885145,0.26355676133729783,0.05651806827498145,-0.07054717726921983,-0.46723870111878635,0.16351289643221759,-0.3893554614196023,0.33513775747636154,159,-0.2570851185906801,-0.5897889686114098,-1.320418878047633,0,-0.8162552610291124,23,1,istanbul_train
 
 ---
 
