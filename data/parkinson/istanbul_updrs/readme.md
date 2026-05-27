@@ -96,3 +96,14 @@ These measure the ratio of harmonic (tonal) signal to noise in the voice.
 ---
 
 **In summary**, the features capture three main dimensions of voice quality: pitch stability (jitter), amplitude stability (shimmer), and noise/harmonic structure — all of which degrade measurably with Parkinson's disease.
+
+Scaled features with StandardScaler:
+
+acoustic_features = [
+    'jitter_local', 'jitter_local_abs', 'jitter_rap',
+       'jitter_ppq5', 'jitter_ddp', 'shimmer_local', 'shimmer_local_db',
+       'shimmer_apq3', 'shimmer_apq5', 'shimmer_apq11', 'shimmer_dda', 'ac',
+       'nth', 'htn', 'pitch_median', 'pitch_mean', 'pitch_std', 'pitch_min',
+       'pitch_max', 'num_pulses', 'mean_period', 'std_period',
+       'unvoiced_frames_frac', "degree_voice_breaks"
+]
