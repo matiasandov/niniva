@@ -96,6 +96,8 @@ Nonlinear dynamical measures, strongly correlated with UPDRS severity.
 | `PPE` | Pitch Period Entropy — nonlinear fundamental-frequency variation measure. |
 | `RPDE_imputed` / `DFA_imputed` / `PPE_imputed` | 1 if the value was imputed (all Istanbul rows). |
 
+RPDE (imputation CV R² = 0.50 — weak, dropped for Istanbul) DFA (imputation CV R² = 0.43 — weak, dropped for Istanbul) PPE (imputation CV R² = 0.78 — usable, clipped to Oxford's 1–99% range)
+
 > Imputation model: `RandomForestRegressor(n_estimators=300)` trained on Oxford using the 13 overlapping acoustic features as inputs. Training R² is printed at build time — **inspect it before trusting these for Istanbul subjects individually**.
 
 ### 3.5 Istanbul-only Features (NaN for Oxford rows)
@@ -157,13 +159,14 @@ The combined dataset supports two modeling regimes. **Always pick a tier explici
 ## 6. Recommendations & Best Practices
 
 1. **Always keep `source` and `_imputed` flags** in any analysis pipeline. They allow downstream filtering, weighting, or stratified evaluation.
-2. **Do not over-trust imputed RPDE / DFA / PPE for Istanbul individuals.** Use them for aggregate analysis or as weak features. Always inspect the training R² emitted by the build script.
+2. **Do not over-trust imputed RPDE / DFA / PPE for Istanbul individuals.** Use them for aggregate analysis or as weak features. Always inspect the training R² emitted by the build script. Imputation quality varies dramatically across the three nonlinear features. Under subject-grouped cross-validation, PPE achieves CV R² ≈ 0.78 and is retained (clipped to Oxford's observed range, with a PPE_clipped flag). RPDE (CV R² ≈ 0.50) and DFA (CV R² ≈ 0.43) are too weak to impute reliably and are set to NaN for Istanbul rows. The _imputed flags remain for full provenance.
 3. **Beware domain shift.** A quick diagnostic: train a logistic regression to predict `source` from the 13 overlapping features. If AUC ≫ 0.5, the two domains differ — apply ComBat or CORAL if serious modeling.
 4. **Healthy controls (status=0) all map to `Mild (<20)` severity** because UPDRS=0. Consider creating a separate `Healthy` category instead of using severity bins for them.
 5. **Repeated measures matter.** Oxford has ~200 recordings per subject. Always use **subject-level grouping in cross-validation** (`GroupKFold` on `subject_id`) to avoid leakage.
 6. **Class imbalance:** Oxford (5,875) dominates Istanbul (~1,200) at the recording level. Consider per-subject aggregation or sample weighting depending on the task.
 7. **When precise clinical UPDRS regression is the goal,** prefer to keep the datasets separate and use one for training, the other for validation. The combined set is best for severity classification, exploratory work, and pretraining.
 8. **Re-scaling note:** the combined acoustic block was StandardScaled after concatenation. If you subset rows (e.g., only Istanbul), re-fit the scaler on the subset.
+9. Always run subject-grouped CV before trusting any cross-dataset imputation. Training R² on tree models can overstate quality by 0.4–0.5 due to subject-level memorization.
 
 ---
 
