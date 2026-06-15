@@ -1,0 +1,79 @@
+{
+  "timestamp": "20260528_134641",
+  "best_model": "XGBoost",
+  "final_hyperparameters": {
+    "learning_rate": 0.05,
+    "max_depth": 4,
+    "n_estimators": 300,
+    "subsample": 0.8
+  },
+  "best_params_per_outer_fold": [
+    {
+      "learning_rate": 0.1,
+      "max_depth": 4,
+      "n_estimators": 500,
+      "subsample": 0.8
+    },
+    {
+      "learning_rate": 0.05,
+      "max_depth": 4,
+      "n_estimators": 500,
+      "subsample": 0.8
+    },
+    {
+      "learning_rate": 0.1,
+      "max_depth": 6,
+      "n_estimators": 500,
+      "subsample": 0.8
+    },
+    {
+      "learning_rate": 0.1,
+      "max_depth": 4,
+      "n_estimators": 300,
+      "subsample": 0.8
+    },
+    {
+      "learning_rate": 0.1,
+      "max_depth": 4,
+      "n_estimators": 500,
+      "subsample": 0.8
+    }
+  ],
+  "features": [
+    "jitter_local",
+    "jitter_local_abs",
+    "jitter_rap",
+    "jitter_ppq5",
+    "jitter_ddp",
+    "shimmer_local",
+    "shimmer_local_db",
+    "shimmer_apq3",
+    "shimmer_apq5",
+    "shimmer_apq11",
+    "shimmer_dda",
+    "ac",
+    "nth",
+    "htn",
+    "pitch_median",
+    "pitch_mean",
+    "pitch_std",
+    "pitch_min",
+    "pitch_max",
+    "num_pulses",
+    "mean_period",
+    "std_period",
+    "unvoiced_frames_frac",
+    "degree_voice_breaks"
+  ],
+  "n_features": 24,
+  "target": "class_label",
+  "group_key": "subject_id",
+  "cv": {
+    "outer": "GroupKFold(5)",
+    "inner": "GroupKFold(3)",
+    "scoring": "roc_auc"
+  },
+  "decision_threshold": 0.5,
+  "random_seed": 42,
+  "data_path": "data/parkinson/istanbul_updrs/processed_istanbul_updrs_data_scaled.csv"
+}
