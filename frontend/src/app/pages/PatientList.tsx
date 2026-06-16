@@ -147,7 +147,7 @@ export function PatientList() {
                       </div>
                       <Link
                         to={`/patients/${patient.id}`}
-                        className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-teal-600 bg-teal-50 rounded-lg hover:bg-teal-100 transition-colors focus:ring-2 focus:ring-teal-500 focus:outline-none whitespace-nowrap opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
+                        className="inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium text-teal-600 bg-teal-50 rounded-lg hover:bg-teal-100 transition-colors focus:ring-2 focus:ring-teal-500 focus:outline-none whitespace-nowrap focus-visible:opacity-100"
                       >
                         <FileText className="w-3.5 h-3.5" />
                         {p.viewRecord}
