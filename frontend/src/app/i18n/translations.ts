@@ -119,7 +119,7 @@ const translations = {
       } as Record<string, { label: string; value: string; highlight: boolean }[]>,
     },
     patients: {
-      title: "Patients Directory",
+      title: "Patients Directory and Summary",
       subtitle: "Manage and review all patient records and AI assessments.",
       addPatient: "Add Patient",
       searchPlaceholder: "Search patients by name or ID...",
@@ -157,7 +157,7 @@ const translations = {
       voicePauseTitle: "Voice Pause Percentage",
       voicePauseDesc: "Comparison of speech pauses during standardized reading task. Increased pause percentage often correlates with bradykinesia in speech.",
       voicePauseCategories: ["Healthy Baseline", "Previous Visit", "Current Visit"],
-      aiInterpretation: "AI Synthesized Interpretation",
+      aiInterpretation: "AI Synthesized Interpretation of last session",
       aiSummary: "Based on today's session transcript and motor test outputs, there is a strong indication of early-stage Parkinsonian symptoms. The combination of resting tremor asymmetry, sequence effect in finger tapping, and reported autonomic symptoms warrant further clinical investigation.",
       redFlagsDetected: "Red Flags Detected",
       recommendationsTitle: "Recommendations",
