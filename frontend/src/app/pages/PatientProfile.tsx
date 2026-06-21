@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend, ReferenceLine } from 'recharts';
-import { AlertTriangle, Brain, CheckCircle2, User, Activity, Calendar, Pill, Stethoscope, HelpCircle, Camera, Loader2 } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend, ReferenceLine, ScatterChart, Scatter, ZAxis } from 'recharts';
+import { AlertTriangle, Brain, CheckCircle2, User, Activity, Calendar, Pill, Stethoscope, HelpCircle, Pencil, Check, X, Users } from 'lucide-react';
 import { useParams, Link } from 'react-router';
 import { useLang } from "../context/LanguageContext";
 import { useT } from "../i18n/translations";
@@ -16,7 +16,59 @@ const fingerTappingData = [
 
 const voicePauseValues = [15, 28, 34];
 
-type TremorState = 'idle' | 'recording' | 'analyzing' | 'done';
+const restingTremorData = [
+  { time: '0s',  rightArm: 4.2, leftArm: 0.4 },
+  { time: '2s',  rightArm: 5.1, leftArm: 0.3 },
+  { time: '4s',  rightArm: 4.8, leftArm: 0.5 },
+  { time: '6s',  rightArm: 5.3, leftArm: 0.2 },
+  { time: '8s',  rightArm: 4.6, leftArm: 0.4 },
+  { time: '10s', rightArm: 5.0, leftArm: 0.3 },
+];
+
+// x = avg tapping frequency (Hz), y = voice pause (%)
+const clusterData = {
+  parkinsons: [
+    { x: 1.9, y: 42 }, { x: 2.1, y: 38 }, { x: 2.3, y: 35 }, { x: 1.7, y: 44 },
+    { x: 2.0, y: 40 }, { x: 1.8, y: 41 }, { x: 2.4, y: 36 }, { x: 2.2, y: 39 },
+    { x: 1.6, y: 45 }, { x: 2.1, y: 43 }, { x: 1.9, y: 37 }, { x: 2.3, y: 33 },
+    { x: 1.5, y: 46 }, { x: 2.0, y: 41 }, { x: 2.2, y: 34 },
+  ],
+  healthy: [
+    { x: 4.2, y: 8 },  { x: 4.8, y: 6 },  { x: 5.1, y: 7 },  { x: 4.5, y: 9 },
+    { x: 5.3, y: 5 },  { x: 4.0, y: 11 }, { x: 4.7, y: 7 },  { x: 5.0, y: 6 },
+    { x: 4.3, y: 10 }, { x: 5.2, y: 8 },  { x: 4.6, y: 9 },  { x: 4.9, y: 6 },
+    { x: 4.4, y: 12 }, { x: 5.1, y: 5 },  { x: 4.7, y: 8 },
+  ],
+  diabetes: [
+    { x: 3.5, y: 14 }, { x: 3.8, y: 12 }, { x: 4.1, y: 11 }, { x: 3.2, y: 16 },
+    { x: 4.3, y: 10 }, { x: 3.6, y: 15 }, { x: 3.9, y: 13 }, { x: 4.0, y: 12 },
+    { x: 3.3, y: 17 }, { x: 4.2, y: 11 }, { x: 3.7, y: 14 },
+  ],
+  psychosis: [
+    { x: 3.0, y: 22 }, { x: 3.5, y: 18 }, { x: 2.8, y: 25 }, { x: 3.2, y: 20 },
+    { x: 4.0, y: 15 }, { x: 3.1, y: 24 }, { x: 2.7, y: 28 }, { x: 3.4, y: 19 },
+    { x: 3.6, y: 17 }, { x: 2.9, y: 26 }, { x: 3.3, y: 21 },
+  ],
+  dip: [
+    { x: 2.5, y: 29 }, { x: 2.8, y: 25 }, { x: 3.0, y: 22 }, { x: 2.3, y: 32 },
+    { x: 3.2, y: 20 }, { x: 2.6, y: 29 }, { x: 2.9, y: 24 }, { x: 2.4, y: 31 },
+    { x: 3.1, y: 21 }, { x: 2.7, y: 27 }, { x: 2.5, y: 33 },
+  ],
+  others: [
+    { x: 2.0, y: 20 }, { x: 3.8, y: 30 }, { x: 4.5, y: 22 }, { x: 1.8, y: 15 },
+    { x: 3.0, y: 35 }, { x: 5.0, y: 20 }, { x: 1.5, y: 30 }, { x: 4.2, y: 28 },
+  ],
+  patient: [{ x: 2.65, y: 34 }],
+};
+
+const clusterProximity = [
+  { key: 'parkinsons', color: '#ef4444', pct: 82 },
+  { key: 'dip',        color: '#f97316', pct: 58 },
+  { key: 'psychosis',  color: '#8b5cf6', pct: 24 },
+  { key: 'others',     color: '#94a3b8', pct: 20 },
+  { key: 'diabetes',   color: '#f59e0b', pct: 12 },
+  { key: 'healthy',    color: '#10b981', pct:  5 },
+];
 
 const confidenceColors: Record<string, string> = {
   High: 'bg-red-100 text-red-700',
@@ -33,16 +85,28 @@ export function PatientProfile() {
   const t = useT(lang);
   const pp = t.patientProfile;
 
-  const [tremorState, setTremorState] = useState<TremorState>('idle');
+  const [isEditingNotes, setIsEditingNotes] = useState(false);
+  const [savedNotes, setSavedNotes] = useState(pp.notesDefault);
+  const [draftNotes, setDraftNotes] = useState(pp.notesDefault);
 
-  const launchTremorTest = () => {
-    setTremorState('recording');
-    setTimeout(() => {
-      setTremorState('analyzing');
-      setTimeout(() => {
-        setTremorState('done');
-      }, 2800);
-    }, 3500);
+  const renderPatientDot = (props: any) => {
+    const { cx, cy } = props;
+    return (
+      <g key={`patient-${cx}-${cy}`}>
+        <circle cx={cx} cy={cy} r={16} fill="#0d9488" fillOpacity={0.12} />
+        <circle cx={cx} cy={cy} r={8}  fill="#0d9488" stroke="white" strokeWidth={2.5} />
+      </g>
+    );
+  };
+
+  const handleSaveNotes = () => {
+    setSavedNotes(draftNotes);
+    setIsEditingNotes(false);
+  };
+
+  const handleCancelNotes = () => {
+    setDraftNotes(savedNotes);
+    setIsEditingNotes(false);
   };
 
   const voicePauseData = pp.voicePauseCategories.map((category, i) => ({
@@ -276,157 +340,214 @@ export function PatientProfile() {
           {/* Resting Tremors Card */}
           <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
             <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-              <Camera className="w-5 h-5 text-indigo-600" />
+              <Activity className="w-5 h-5 text-indigo-600" />
               {pp.restingTremorsTitle}
             </h3>
             <p className="text-sm text-slate-500 mb-6">{pp.restingTremorsDesc}</p>
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={restingTremorData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis dataKey="time" stroke="#64748b" fontSize={12} tickLine={false} />
+                  <YAxis stroke="#64748b" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(v) => `${v} Hz`} domain={[0, 7]} />
+                  <Tooltip
+                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                    formatter={(value: number, name: string) => [`${value} Hz`, name]}
+                  />
+                  <Legend />
+                  <ReferenceLine
+                    y={0.8}
+                    stroke="#10b981"
+                    strokeDasharray="6 3"
+                    strokeWidth={2}
+                    label={{ value: pp.healthyAvgLabel, position: 'insideTopRight', fontSize: 10, fill: '#059669', fontWeight: 600 }}
+                  />
+                  <ReferenceLine
+                    y={3.5}
+                    stroke="#ef4444"
+                    strokeDasharray="6 3"
+                    strokeWidth={2}
+                    label={{ value: pp.parkinsonsAvgLabel, position: 'insideTopRight', fontSize: 10, fill: '#dc2626', fontWeight: 600 }}
+                  />
+                  <Line type="monotone" name={pp.restingTremorsRightArm} dataKey="rightArm" stroke="#ef4444" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                  <Line type="monotone" name={pp.restingTremorsLeftArm}  dataKey="leftArm"  stroke="#10b981" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
 
-            {/* Idle state */}
-            {tremorState === 'idle' && (
-              <div className="flex flex-col items-center justify-center h-[220px] bg-slate-900 rounded-xl border border-slate-700 gap-5">
-                <Camera className="w-14 h-14 text-slate-600" />
-                <button
-                  onClick={launchTremorTest}
-                  className="px-5 py-2.5 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors flex items-center gap-2 text-sm"
-                >
-                  <Camera className="w-4 h-4" />
-                  {pp.restingTremorsLaunch}
-                </button>
+            {/* Asymmetry summary row */}
+            <div className="mt-5 grid grid-cols-3 gap-3 text-center">
+              <div className="bg-red-50 border border-red-100 rounded-lg p-3">
+                <p className="text-xs text-slate-500 mb-1">{pp.restingTremorsRightArm}</p>
+                <p className="text-lg font-bold text-red-600">4.2–5.3 Hz</p>
+                <p className="text-xs text-red-500 mt-0.5">{pp.restingTremorsTremorDetected}</p>
               </div>
-            )}
-
-            {/* Recording state */}
-            {tremorState === 'recording' && (
-              <div className="relative h-[220px] bg-slate-900 rounded-xl border border-slate-700 overflow-hidden flex flex-col items-center justify-center gap-4">
-                {/* subtle grid */}
-                <div className="absolute inset-0 opacity-[0.06]"
-                  style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
-                {/* REC badge */}
-                <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/50 px-2.5 py-1 rounded-full">
-                  <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                  <span className="text-xs text-white font-bold tracking-wider">REC</span>
+              <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 flex flex-col items-center justify-center gap-1">
+                <p className="text-xs text-slate-500">{pp.restingTremorsAsymmetryIndex}</p>
+                <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden mt-1">
+                  <div className="h-full rounded-full bg-gradient-to-r from-emerald-400 via-amber-400 to-red-500" style={{ width: '78%' }} />
                 </div>
-                {/* Person silhouette */}
-                <svg width="90" height="100" viewBox="0 0 90 100" fill="none" className="opacity-25">
-                  <circle cx="45" cy="13" r="11" stroke="#94a3b8" strokeWidth="2" />
-                  <line x1="45" y1="24" x2="45" y2="60" stroke="#94a3b8" strokeWidth="2" />
-                  <line x1="45" y1="34" x2="18" y2="55" stroke="#94a3b8" strokeWidth="2" />
-                  <line x1="45" y1="34" x2="72" y2="55" stroke="#94a3b8" strokeWidth="2" />
-                  <line x1="45" y1="60" x2="28" y2="72" stroke="#94a3b8" strokeWidth="2" />
-                  <line x1="45" y1="60" x2="62" y2="72" stroke="#94a3b8" strokeWidth="2" />
-                  <circle cx="18" cy="57" r="4" stroke="#94a3b8" strokeWidth="1.5" />
-                  <circle cx="72" cy="57" r="4" stroke="#94a3b8" strokeWidth="1.5" />
-                </svg>
-                <p className="text-xs text-slate-400 text-center">{pp.restingTremorsRecording}</p>
+                <p className="text-sm font-bold text-red-600">78% — {pp.restingTremorsAsymmetryLevel}</p>
               </div>
-            )}
-
-            {/* Analyzing state */}
-            {tremorState === 'analyzing' && (
-              <div className="relative h-[220px] bg-slate-900 rounded-xl border border-slate-700 overflow-hidden flex flex-col items-center justify-center gap-4">
-                <div className="absolute inset-0 opacity-[0.06]"
-                  style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
-                {/* CV corner brackets */}
-                <div className="absolute top-5 left-5 w-7 h-7 border-t-2 border-l-2 border-emerald-400 animate-pulse" />
-                <div className="absolute top-5 right-5 w-7 h-7 border-t-2 border-r-2 border-emerald-400 animate-pulse" />
-                <div className="absolute bottom-5 left-5 w-7 h-7 border-b-2 border-l-2 border-emerald-400 animate-pulse" />
-                <div className="absolute bottom-5 right-5 w-7 h-7 border-b-2 border-r-2 border-emerald-400 animate-pulse" />
-                {/* Keypoint dots simulating arm detection */}
-                <div className="absolute" style={{ top: '55%', left: '26%' }}>
-                  <span className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-ping block" />
-                </div>
-                <div className="absolute" style={{ top: '55%', right: '26%' }}>
-                  <span className="w-2.5 h-2.5 bg-red-400 rounded-full animate-ping block" />
-                </div>
-                <div className="absolute" style={{ top: '38%', left: '38%' }}>
-                  <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-ping block" />
-                </div>
-                <div className="absolute" style={{ top: '38%', right: '38%' }}>
-                  <span className="w-1.5 h-1.5 bg-red-400 rounded-full animate-ping block" />
-                </div>
-                <Loader2 className="w-6 h-6 text-emerald-400 animate-spin" />
-                <p className="text-xs text-slate-300 text-center">{pp.restingTremorsAnalyzing}</p>
+              <div className="bg-emerald-50 border border-emerald-100 rounded-lg p-3">
+                <p className="text-xs text-slate-500 mb-1">{pp.restingTremorsLeftArm}</p>
+                <p className="text-lg font-bold text-emerald-600">~0.3 Hz</p>
+                <p className="text-xs text-emerald-600 mt-0.5">{pp.restingTremorsNormal}</p>
               </div>
-            )}
-
-            {/* Done state — results */}
-            {tremorState === 'done' && (
-              <div className="space-y-4">
-                {/* Arm comparison */}
-                <div className="grid grid-cols-2 gap-4">
-                  {/* Left arm — normal */}
-                  <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 flex flex-col gap-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-bold text-slate-700">{pp.restingTremorsLeftArm}</span>
-                      <span className="flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        {pp.restingTremorsNormal}
-                      </span>
-                    </div>
-                    <div className="space-y-2 text-xs text-slate-600">
-                      <div className="flex justify-between"><span>Frequency</span><span className="font-medium">~0.3 Hz</span></div>
-                      <div className="flex justify-between"><span>Amplitude</span><span className="font-medium">Low</span></div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-xs text-slate-500 mb-1"><span>Signal</span><span>8%</span></div>
-                      <div className="h-2 bg-emerald-200 rounded-full overflow-hidden">
-                        <div className="h-full bg-emerald-500 rounded-full" style={{ width: '8%' }} />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Right arm — tremor */}
-                  <div className="rounded-xl border border-red-200 bg-red-50 p-4 flex flex-col gap-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-bold text-slate-700">{pp.restingTremorsRightArm}</span>
-                      <span className="flex items-center gap-1 text-xs font-semibold text-red-700 bg-red-100 px-2 py-0.5 rounded-full">
-                        <AlertTriangle className="w-3.5 h-3.5" />
-                        {pp.restingTremorsTremorDetected}
-                      </span>
-                    </div>
-                    <div className="space-y-2 text-xs text-slate-600">
-                      <div className="flex justify-between"><span>Frequency</span><span className="font-medium text-red-700">4–6 Hz</span></div>
-                      <div className="flex justify-between"><span>Amplitude</span><span className="font-medium text-red-700">Elevated</span></div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-xs text-slate-500 mb-1"><span>Signal</span><span className="text-red-600 font-medium">78%</span></div>
-                      <div className="h-2 bg-red-200 rounded-full overflow-hidden">
-                        <div className="h-full bg-red-500 rounded-full" style={{ width: '78%' }} />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Asymmetry Index */}
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-bold text-slate-700">{pp.restingTremorsAsymmetryIndex}</span>
-                    <span className="text-sm font-bold text-red-700">78% — {pp.restingTremorsAsymmetryLevel}</span>
-                  </div>
-                  <div className="h-3 bg-slate-200 rounded-full overflow-hidden">
-                    <div className="h-full rounded-full bg-gradient-to-r from-emerald-400 via-amber-400 to-red-500" style={{ width: '78%' }} />
-                  </div>
-                  <div className="flex justify-between text-xs text-slate-400">
-                    <span>Symmetric</span>
-                    <span>Highly Asymmetric</span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setTremorState('idle')}
-                  className="text-xs text-indigo-600 hover:text-indigo-800 font-medium flex items-center gap-1 transition-colors"
-                >
-                  <Camera className="w-3.5 h-3.5" />
-                  {pp.restingTremorsRerun}
-                </button>
-              </div>
-            )}
+            </div>
 
             <div className="mt-5 p-4 bg-amber-50 rounded-lg border border-amber-100 flex gap-3">
               <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
               <p className="text-sm text-amber-800 leading-relaxed">{pp.restingTremorsObservation}</p>
             </div>
           </div>
+        </div>
+      </div>
+      {/* Population Benchmarking */}
+      <div>
+        <div className="mb-5">
+          <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2 mb-1">
+            <Users className="w-5 h-5 text-teal-600" />
+            {pp.benchmarkTitle}
+          </h2>
+          <p className="text-sm text-slate-500">{pp.benchmarkSubtitle}</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Scatter chart */}
+          <div className="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            <div className="h-[420px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <ScatterChart margin={{ top: 16, right: 24, bottom: 36, left: 16 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis
+                    dataKey="x" type="number" name={pp.benchmarkXLabel}
+                    domain={[1, 6]} unit=" Hz"
+                    stroke="#64748b" fontSize={11} tickLine={false}
+                    label={{ value: pp.benchmarkXLabel, position: 'insideBottom', offset: -22, fontSize: 11, fill: '#64748b' }}
+                  />
+                  <YAxis
+                    dataKey="y" type="number" name={pp.benchmarkYLabel}
+                    domain={[0, 50]} unit="%"
+                    stroke="#64748b" fontSize={11} tickLine={false} axisLine={false}
+                    label={{ value: pp.benchmarkYLabel, angle: -90, position: 'insideLeft', offset: 12, fontSize: 11, fill: '#64748b' }}
+                  />
+                  <ZAxis range={[48, 48]} />
+                  <Tooltip
+                    cursor={{ strokeDasharray: '3 3' }}
+                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: 12 }}
+                    formatter={(value: number, name: string) => [
+                      name === pp.benchmarkXLabel ? `${value} Hz` : `${value}%`,
+                      name,
+                    ]}
+                  />
+                  <Legend wrapperStyle={{ fontSize: 11, paddingTop: 12 }} />
+                  <Scatter name={pp.benchmarkClusters.parkinsons} data={clusterData.parkinsons} fill="#ef4444" fillOpacity={0.6} />
+                  <Scatter name={pp.benchmarkClusters.dip}         data={clusterData.dip}        fill="#f97316" fillOpacity={0.6} />
+                  <Scatter name={pp.benchmarkClusters.psychosis}   data={clusterData.psychosis}  fill="#8b5cf6" fillOpacity={0.6} />
+                  <Scatter name={pp.benchmarkClusters.diabetes}    data={clusterData.diabetes}   fill="#f59e0b" fillOpacity={0.6} />
+                  <Scatter name={pp.benchmarkClusters.healthy}     data={clusterData.healthy}    fill="#10b981" fillOpacity={0.6} />
+                  <Scatter name={pp.benchmarkClusters.others}      data={clusterData.others}     fill="#94a3b8" fillOpacity={0.6} />
+                  <Scatter name={pp.benchmarkClusters.patient}     data={clusterData.patient}    fill="#0d9488" shape={renderPatientDot} />
+                </ScatterChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Cluster proximity panel */}
+          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-5">
+            <div>
+              <h3 className="text-sm font-bold text-slate-700 mb-1">{pp.benchmarkProximityTitle}</h3>
+              <p className="text-xs text-slate-500 leading-relaxed">{pp.benchmarkProximityDesc}</p>
+            </div>
+
+            <div className="space-y-3">
+              {clusterProximity.map((cluster) => (
+                <div key={cluster.key}>
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: cluster.color }} />
+                      <span className="text-xs font-medium text-slate-700">
+                        {pp.benchmarkClusters[cluster.key as keyof typeof pp.benchmarkClusters]}
+                      </span>
+                    </div>
+                    <span className="text-xs font-bold" style={{ color: cluster.color }}>{cluster.pct}%</span>
+                  </div>
+                  <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all"
+                      style={{ width: `${cluster.pct}%`, backgroundColor: cluster.color, opacity: 0.8 }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-xs text-slate-400 leading-relaxed border-t border-slate-100 pt-4 mt-auto">
+              {pp.benchmarkNote}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Doctor's Notes */}
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="p-4 border-b border-slate-100 bg-slate-50 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Pencil className="w-4 h-4 text-slate-500" />
+            <h2 className="font-semibold text-slate-800">{pp.notesTitle}</h2>
+          </div>
+          {isEditingNotes ? (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={handleCancelNotes}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
+                {pp.notesCancel}
+              </button>
+              <button
+                onClick={handleSaveNotes}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-teal-600 rounded-lg hover:bg-teal-700 transition-colors"
+              >
+                <Check className="w-3.5 h-3.5" />
+                {pp.notesSave}
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setIsEditingNotes(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors"
+            >
+              <Pencil className="w-3.5 h-3.5" />
+              {pp.notesEdit}
+            </button>
+          )}
+        </div>
+
+        <div className="p-5">
+          {isEditingNotes ? (
+            <textarea
+              value={draftNotes}
+              onChange={(e) => setDraftNotes(e.target.value)}
+              rows={6}
+              placeholder={pp.notesPlaceholder}
+              className="w-full text-sm text-slate-700 leading-relaxed resize-none rounded-lg border border-slate-200 p-3 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+            />
+          ) : (
+            <div>
+              <p className="text-xs text-slate-400 mb-3 flex items-center gap-1.5">
+                <span className="font-medium text-slate-500">{pp.notesAuthor}</span>
+                <span>·</span>
+                <span>{pp.lastVisit} {pp.today}</span>
+              </p>
+              {savedNotes ? (
+                <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap">{savedNotes}</p>
+              ) : (
+                <p className="text-sm text-slate-400 italic">{pp.notesPlaceholder}</p>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>
