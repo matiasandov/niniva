@@ -255,6 +255,118 @@ export function PatientProfile() {
         </div>
       </div>
 
+      {/* Population Benchmarking */}
+      <div>
+        <div className="mb-5">
+          <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2 mb-1">
+            <Users className="w-5 h-5 text-teal-600" />
+            {pp.benchmarkTitle}
+          </h2>
+          <p className="text-sm text-slate-500">{pp.benchmarkSubtitle}</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Scatter chart */}
+          <div className="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+            {/* Custom legend — flex-wrap so nothing overlaps */}
+            <div className="flex flex-wrap gap-x-5 gap-y-2 mb-4">
+              {(
+                [
+                  { key: 'parkinsons', color: '#ef4444' },
+                  { key: 'dip',        color: '#f97316' },
+                  { key: 'psychosis',  color: '#8b5cf6' },
+                  { key: 'diabetes',   color: '#f59e0b' },
+                  { key: 'healthy',    color: '#10b981' },
+                  { key: 'others',     color: '#94a3b8' },
+                ] as const
+              ).map(({ key, color }) => (
+                <div key={key} className="flex items-center gap-1.5">
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
+                  <span className="text-xs text-slate-600">{pp.benchmarkClusters[key]}</span>
+                </div>
+              ))}
+              <div className="flex items-center gap-1.5">
+                <span className="relative flex w-3 h-3 shrink-0">
+                  <span className="absolute inset-0 rounded-full bg-teal-500 opacity-30" />
+                  <span className="relative m-auto w-2 h-2 rounded-full bg-teal-600" />
+                </span>
+                <span className="text-xs font-semibold text-teal-700">{pp.benchmarkClusters.patient}</span>
+              </div>
+            </div>
+
+            <div className="h-[380px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <ScatterChart margin={{ top: 10, right: 24, bottom: 36, left: 16 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                  <XAxis
+                    dataKey="x" type="number" name={pp.benchmarkXLabel}
+                    domain={[1, 6]} unit=" Hz"
+                    stroke="#64748b" fontSize={11} tickLine={false}
+                    label={{ value: pp.benchmarkXLabel, position: 'insideBottom', offset: -22, fontSize: 11, fill: '#64748b' }}
+                  />
+                  <YAxis
+                    dataKey="y" type="number" name={pp.benchmarkYLabel}
+                    domain={[0, 50]} unit="%"
+                    stroke="#64748b" fontSize={11} tickLine={false} axisLine={false}
+                    label={{ value: pp.benchmarkYLabel, angle: -90, position: 'insideLeft', offset: 12, fontSize: 11, fill: '#64748b' }}
+                  />
+                  <ZAxis range={[48, 48]} />
+                  <Tooltip
+                    cursor={{ strokeDasharray: '3 3' }}
+                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: 12 }}
+                    formatter={(value: number, name: string) => [
+                      name === pp.benchmarkXLabel ? `${value} Hz` : `${value}%`,
+                      name,
+                    ]}
+                  />
+                  <Scatter name={pp.benchmarkClusters.parkinsons} data={clusterData.parkinsons} fill="#ef4444" fillOpacity={0.6} />
+                  <Scatter name={pp.benchmarkClusters.dip}         data={clusterData.dip}        fill="#f97316" fillOpacity={0.6} />
+                  <Scatter name={pp.benchmarkClusters.psychosis}   data={clusterData.psychosis}  fill="#8b5cf6" fillOpacity={0.6} />
+                  <Scatter name={pp.benchmarkClusters.diabetes}    data={clusterData.diabetes}   fill="#f59e0b" fillOpacity={0.6} />
+                  <Scatter name={pp.benchmarkClusters.healthy}     data={clusterData.healthy}    fill="#10b981" fillOpacity={0.6} />
+                  <Scatter name={pp.benchmarkClusters.others}      data={clusterData.others}     fill="#94a3b8" fillOpacity={0.6} />
+                  <Scatter name={pp.benchmarkClusters.patient}     data={clusterData.patient}    fill="#0d9488" shape={renderPatientDot} />
+                </ScatterChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Cluster proximity panel */}
+          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-5">
+            <div>
+              <h3 className="text-sm font-bold text-slate-700 mb-1">{pp.benchmarkProximityTitle}</h3>
+              <p className="text-xs text-slate-500 leading-relaxed">{pp.benchmarkProximityDesc}</p>
+            </div>
+
+            <div className="space-y-3">
+              {clusterProximity.map((cluster) => (
+                <div key={cluster.key}>
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: cluster.color }} />
+                      <span className="text-xs font-medium text-slate-700">
+                        {pp.benchmarkClusters[cluster.key as keyof typeof pp.benchmarkClusters]}
+                      </span>
+                    </div>
+                    <span className="text-xs font-bold" style={{ color: cluster.color }}>{cluster.pct}%</span>
+                  </div>
+                  <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full transition-all"
+                      style={{ width: `${cluster.pct}%`, backgroundColor: cluster.color, opacity: 0.8 }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-xs text-slate-400 leading-relaxed border-t border-slate-100 pt-4 mt-auto">
+              {pp.benchmarkNote}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Motor Tests Results & Analytics */}
       <div>
         <div className="mb-5">
@@ -400,92 +512,6 @@ export function PatientProfile() {
               <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
               <p className="text-sm text-amber-800 leading-relaxed">{pp.restingTremorsObservation}</p>
             </div>
-          </div>
-        </div>
-      </div>
-      {/* Population Benchmarking */}
-      <div>
-        <div className="mb-5">
-          <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2 mb-1">
-            <Users className="w-5 h-5 text-teal-600" />
-            {pp.benchmarkTitle}
-          </h2>
-          <p className="text-sm text-slate-500">{pp.benchmarkSubtitle}</p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Scatter chart */}
-          <div className="lg:col-span-2 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-            <div className="h-[420px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <ScatterChart margin={{ top: 16, right: 24, bottom: 36, left: 16 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis
-                    dataKey="x" type="number" name={pp.benchmarkXLabel}
-                    domain={[1, 6]} unit=" Hz"
-                    stroke="#64748b" fontSize={11} tickLine={false}
-                    label={{ value: pp.benchmarkXLabel, position: 'insideBottom', offset: -22, fontSize: 11, fill: '#64748b' }}
-                  />
-                  <YAxis
-                    dataKey="y" type="number" name={pp.benchmarkYLabel}
-                    domain={[0, 50]} unit="%"
-                    stroke="#64748b" fontSize={11} tickLine={false} axisLine={false}
-                    label={{ value: pp.benchmarkYLabel, angle: -90, position: 'insideLeft', offset: 12, fontSize: 11, fill: '#64748b' }}
-                  />
-                  <ZAxis range={[48, 48]} />
-                  <Tooltip
-                    cursor={{ strokeDasharray: '3 3' }}
-                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: 12 }}
-                    formatter={(value: number, name: string) => [
-                      name === pp.benchmarkXLabel ? `${value} Hz` : `${value}%`,
-                      name,
-                    ]}
-                  />
-                  <Legend wrapperStyle={{ fontSize: 11, paddingTop: 12 }} />
-                  <Scatter name={pp.benchmarkClusters.parkinsons} data={clusterData.parkinsons} fill="#ef4444" fillOpacity={0.6} />
-                  <Scatter name={pp.benchmarkClusters.dip}         data={clusterData.dip}        fill="#f97316" fillOpacity={0.6} />
-                  <Scatter name={pp.benchmarkClusters.psychosis}   data={clusterData.psychosis}  fill="#8b5cf6" fillOpacity={0.6} />
-                  <Scatter name={pp.benchmarkClusters.diabetes}    data={clusterData.diabetes}   fill="#f59e0b" fillOpacity={0.6} />
-                  <Scatter name={pp.benchmarkClusters.healthy}     data={clusterData.healthy}    fill="#10b981" fillOpacity={0.6} />
-                  <Scatter name={pp.benchmarkClusters.others}      data={clusterData.others}     fill="#94a3b8" fillOpacity={0.6} />
-                  <Scatter name={pp.benchmarkClusters.patient}     data={clusterData.patient}    fill="#0d9488" shape={renderPatientDot} />
-                </ScatterChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          {/* Cluster proximity panel */}
-          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-5">
-            <div>
-              <h3 className="text-sm font-bold text-slate-700 mb-1">{pp.benchmarkProximityTitle}</h3>
-              <p className="text-xs text-slate-500 leading-relaxed">{pp.benchmarkProximityDesc}</p>
-            </div>
-
-            <div className="space-y-3">
-              {clusterProximity.map((cluster) => (
-                <div key={cluster.key}>
-                  <div className="flex items-center justify-between mb-1">
-                    <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: cluster.color }} />
-                      <span className="text-xs font-medium text-slate-700">
-                        {pp.benchmarkClusters[cluster.key as keyof typeof pp.benchmarkClusters]}
-                      </span>
-                    </div>
-                    <span className="text-xs font-bold" style={{ color: cluster.color }}>{cluster.pct}%</span>
-                  </div>
-                  <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all"
-                      style={{ width: `${cluster.pct}%`, backgroundColor: cluster.color, opacity: 0.8 }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <p className="text-xs text-slate-400 leading-relaxed border-t border-slate-100 pt-4 mt-auto">
-              {pp.benchmarkNote}
-            </p>
           </div>
         </div>
       </div>
