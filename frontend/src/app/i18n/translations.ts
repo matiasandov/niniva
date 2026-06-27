@@ -57,6 +57,7 @@ const translations = {
       flaggedCount: "flagged",
       newCount: "new today",
       addPatient: "Add Patient",
+      aiDisclaimer: "AI-generated · For clinical reference only. Always verify with your own judgment before acting.",
     },
     liveSession: {
       title: "Live AI Session",
@@ -273,6 +274,7 @@ const translations = {
       notesCancel: "Cancel",
       notesPlaceholder: "Add clinical notes for this patient...",
       notesDefault: "Patient presents with progressive right-hand resting tremor and new-onset orthostatic dizziness since last visit. Pseudoephedrine use identified as potential DIP risk factor — recommend discontinuation before next evaluation.\n\nScheduling DaTscan to assess dopaminergic deficit. UPDRS Part III to be completed at next visit. Follow up in 4 weeks.",
+      aiDisclaimer: "AI-generated · For clinical reference only. Always verify with your own judgment before acting.",
     },
   },
   es: {
@@ -331,6 +333,7 @@ const translations = {
       flaggedCount: "marcados",
       newCount: "nuevos hoy",
       addPatient: "Agregar Paciente",
+      aiDisclaimer: "Generado por IA · Solo para referencia clínica. Siempre verifique con su propio criterio antes de actuar.",
     },
     liveSession: {
       title: "Sesión IA en Vivo",
@@ -547,6 +550,7 @@ const translations = {
       notesCancel: "Cancelar",
       notesPlaceholder: "Agregar notas clínicas para este paciente...",
       notesDefault: "El paciente presenta temblor de reposo progresivo en mano derecha y mareos ortostáticos de nueva aparición desde la última visita. Uso de pseudoefedrina identificado como factor de riesgo potencial de DIP — se recomienda discontinuación antes de la próxima evaluación.\n\nSe programa DaTscan para evaluación de déficit dopaminérgico. UPDRS Parte III a completar en próxima visita. Seguimiento en 4 semanas.",
+      aiDisclaimer: "Generado por IA · Solo para referencia clínica. Siempre verifique con su propio criterio antes de actuar.",
     },
   },
 };
