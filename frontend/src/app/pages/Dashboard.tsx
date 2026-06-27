@@ -127,6 +127,51 @@ export function Dashboard() {
         </div>
       </div>
 
+      {/* ── AI Clinical Insights ─────────────────────────────────── */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+              <Bell className="w-5 h-5 text-purple-600" />
+              {d.aiInsightsTitle}
+            </h2>
+            <p className="text-sm text-slate-500">{d.aiInsightsSubtitle}</p>
+          </div>
+          <span className="text-xs text-slate-400 flex items-center gap-1">
+            <Clock className="w-3.5 h-3.5" /> Updated just now
+          </span>
+        </div>
+        <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-4 py-2.5 mb-4">
+          <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0" />
+          <p className="text-xs text-amber-800">{d.aiDisclaimer}</p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {aiInsights.map((insight) => {
+            const { Icon, color, bg } = severityIcon[insight.severity];
+            return (
+              <div key={insight.id} className={`rounded-xl border p-5 flex gap-4 ${bg}`}>
+                <Icon className={`w-5 h-5 shrink-0 mt-0.5 ${color}`} />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <span className="text-sm font-semibold text-slate-900">{insight.name}</span>
+                    <span className={`text-xs font-medium px-1.5 py-0.5 rounded-full shrink-0 ${severityIcon[insight.severity].bg.replace('50', '100').replace('border-', '')} ${color}`}>
+                      {severityLabel[insight.severity]}
+                    </span>
+                  </div>
+                  <p className="text-sm text-slate-700 leading-relaxed">{insight.text}</p>
+                  <div className="flex items-center justify-between mt-3">
+                    <span className="text-xs text-slate-400">{insight.timeAgo}</span>
+                    <Link to={`/patients/${insight.id}`} className="text-xs font-medium text-teal-600 hover:text-teal-800 flex items-center gap-0.5 transition-colors">
+                      {d.viewProfile} <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
       {/* ── KPI Stats ──────────────────────────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {kpiStats.map((stat, i) => (
@@ -319,46 +364,6 @@ export function Dashboard() {
         </div>
       </div>
 
-      {/* ── AI Clinical Insights ─────────────────────────────────── */}
-      <div>
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
-              <Bell className="w-5 h-5 text-purple-600" />
-              {d.aiInsightsTitle}
-            </h2>
-            <p className="text-sm text-slate-500">{d.aiInsightsSubtitle}</p>
-          </div>
-          <span className="text-xs text-slate-400 flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5" /> Updated just now
-          </span>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {aiInsights.map((insight) => {
-            const { Icon, color, bg } = severityIcon[insight.severity];
-            return (
-              <div key={insight.id} className={`rounded-xl border p-5 flex gap-4 ${bg}`}>
-                <Icon className={`w-5 h-5 shrink-0 mt-0.5 ${color}`} />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between gap-2 mb-1">
-                    <span className="text-sm font-semibold text-slate-900">{insight.name}</span>
-                    <span className={`text-xs font-medium px-1.5 py-0.5 rounded-full shrink-0 ${severityIcon[insight.severity].bg.replace('50', '100').replace('border-', '')} ${color}`}>
-                      {severityLabel[insight.severity]}
-                    </span>
-                  </div>
-                  <p className="text-sm text-slate-700 leading-relaxed">{insight.text}</p>
-                  <div className="flex items-center justify-between mt-3">
-                    <span className="text-xs text-slate-400">{insight.timeAgo}</span>
-                    <Link to={`/patients/${insight.id}`} className="text-xs font-medium text-teal-600 hover:text-teal-800 flex items-center gap-0.5 transition-colors">
-                      {d.viewProfile} <ArrowRight className="w-3 h-3" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
 
     </div>
   );

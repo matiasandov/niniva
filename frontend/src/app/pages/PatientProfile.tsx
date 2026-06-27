@@ -144,9 +144,15 @@ export function PatientProfile() {
       {/* AI Interpretation + Collected Domain Data */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 bg-white rounded-xl border border-teal-200 shadow-sm overflow-hidden">
-          <div className="p-4 bg-teal-50 border-b border-teal-100 flex items-center gap-2">
-            <Brain className="w-5 h-5 text-teal-700" />
-            <h2 className="font-bold text-teal-900">{pp.aiInterpretation}</h2>
+          <div className="p-4 bg-teal-50 border-b border-teal-100 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <Brain className="w-5 h-5 text-teal-700" />
+              <h2 className="font-bold text-teal-900">{pp.aiInterpretation}</h2>
+            </div>
+            <span className="flex items-center gap-1 text-xs font-medium text-amber-700 bg-amber-50 border border-amber-200 px-2 py-1 rounded-full shrink-0">
+              <AlertTriangle className="w-3 h-3" />
+              AI
+            </span>
           </div>
           <div className="p-5 space-y-4">
             <p className="text-sm text-slate-700 leading-relaxed">{pp.aiSummary}</p>
@@ -171,6 +177,10 @@ export function PatientProfile() {
                   </li>
                 ))}
               </ul>
+            </div>
+            <div className="pt-4 border-t border-amber-100 flex items-start gap-2 bg-amber-50 -mx-5 -mb-5 px-5 py-3 rounded-b-xl mt-4">
+              <AlertTriangle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+              <p className="text-xs text-amber-800 leading-relaxed">{pp.aiDisclaimer}</p>
             </div>
           </div>
         </div>
