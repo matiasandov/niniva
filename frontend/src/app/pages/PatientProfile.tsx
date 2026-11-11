@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend, ReferenceLine, ScatterChart, Scatter, ZAxis } from 'recharts';
-import { AlertTriangle, Brain, CheckCircle2, User, Activity, Calendar, Pill, Stethoscope, HelpCircle, Pencil, Check, X, Users } from 'lucide-react';
+import { AlertTriangle, Brain, CheckCircle2, User, Activity, Calendar, Pill, Stethoscope, HelpCircle, Pencil, Check, X, Users, TrendingDown, TrendingUp, Zap } from 'lucide-react';
 import { useParams, Link } from 'react-router';
 import { useLang } from "../context/LanguageContext";
 import { useT } from "../i18n/translations";
@@ -138,6 +138,123 @@ export function PatientProfile() {
           <Link to="/tests" className="px-4 py-2 bg-teal-600 text-white rounded-lg font-medium hover:bg-teal-700 transition-colors">
             {pp.runTests}
           </Link>
+        </div>
+      </div>
+
+      {/* Executive Summary */}
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <div className="px-5 py-4 bg-gradient-to-r from-slate-800 to-slate-700 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Brain className="w-5 h-5 text-teal-400" />
+            <h2 className="font-bold text-white">{pp.execSummaryTitle}</h2>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-slate-400">{pp.execSummarySubtitle}</span>
+            <span className="flex items-center gap-1 text-xs font-medium text-amber-300 bg-amber-900/40 border border-amber-700/50 px-2 py-0.5 rounded-full">
+              <AlertTriangle className="w-3 h-3" /> AI
+            </span>
+          </div>
+        </div>
+
+        {/* Key metric chips */}
+        <div className="px-5 py-4 grid grid-cols-2 lg:grid-cols-4 gap-3 border-b border-slate-100">
+          <div className="flex flex-col gap-1 p-3 bg-red-50 border border-red-100 rounded-lg">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{pp.fingerTappingTitle}</span>
+              <TrendingDown className="w-4 h-4 text-red-500" />
+            </div>
+            <span className="text-xl font-bold text-red-600">1.8 Hz</span>
+            <span className="text-xs text-red-500">{pp.execBelowThreshold}</span>
+          </div>
+          <div className="flex flex-col gap-1 p-3 bg-red-50 border border-red-100 rounded-lg">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{pp.voicePauseTitle}</span>
+              <TrendingUp className="w-4 h-4 text-red-500" />
+            </div>
+            <span className="text-xl font-bold text-red-600">34%</span>
+            <span className="text-xs text-red-500">{pp.execAboveThreshold}</span>
+          </div>
+          <div className="flex flex-col gap-1 p-3 bg-red-50 border border-red-100 rounded-lg">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{pp.restingTremorsAsymmetryIndex}</span>
+              <TrendingUp className="w-4 h-4 text-red-500" />
+            </div>
+            <span className="text-xl font-bold text-red-600">78%</span>
+            <span className="text-xs text-red-500">{pp.execSevere}</span>
+          </div>
+          <div className="flex flex-col gap-1 p-3 bg-red-50 border border-red-100 rounded-lg">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">{pp.execPopMatchLabel}</span>
+              <span className="text-xs font-bold text-red-600">82%</span>
+            </div>
+            <span className="text-sm font-bold text-slate-800">{pp.benchmarkClusters.parkinsons}</span>
+            <span className="text-xs text-red-500">{pp.execHighMatch}</span>
+          </div>
+        </div>
+
+        {/* 3-column insight grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
+          {/* Critical flags */}
+          <div className="px-5 py-4">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+              <AlertTriangle className="w-3.5 h-3.5 text-red-500" />
+              {pp.execFlagsLabel}
+            </h3>
+            <ul className="space-y-2">
+              {pp.redFlags.slice(0, 3).map((flag, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-slate-700">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0 mt-1.5" />
+                  {flag}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Top cluster matches */}
+          <div className="px-5 py-4">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+              <Users className="w-3.5 h-3.5 text-teal-600" />
+              {pp.execPopMatchLabel}
+            </h3>
+            <div className="space-y-3">
+              {clusterProximity.slice(0, 3).map((cluster) => (
+                <div key={cluster.key}>
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: cluster.color }} />
+                      <span className="text-xs font-medium text-slate-700">
+                        {pp.benchmarkClusters[cluster.key as keyof typeof pp.benchmarkClusters]}
+                      </span>
+                    </div>
+                    <span className="text-xs font-bold" style={{ color: cluster.color }}>{cluster.pct}%</span>
+                  </div>
+                  <div className="h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-full rounded-full" style={{ width: `${cluster.pct}%`, backgroundColor: cluster.color, opacity: 0.75 }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Priority action */}
+          <div className="px-5 py-4">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3 flex items-center gap-1.5">
+              <Zap className="w-3.5 h-3.5 text-amber-500" />
+              {pp.execPriorityActionLabel}
+            </h3>
+            <p className="text-sm text-slate-700 leading-relaxed">{pp.execPriorityAction}</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <span className="text-xs font-medium px-2 py-1 bg-teal-50 text-teal-700 border border-teal-100 rounded-full">DaTscan</span>
+              <span className="text-xs font-medium px-2 py-1 bg-amber-50 text-amber-700 border border-amber-100 rounded-full">Medication Review</span>
+              <span className="text-xs font-medium px-2 py-1 bg-slate-100 text-slate-600 border border-slate-200 rounded-full">UPDRS III</span>
+            </div>
+          </div>
+        </div>
+
+        {/* AI disclaimer footer */}
+        <div className="px-5 py-3 bg-amber-50 border-t border-amber-100 flex items-center gap-2">
+          <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+          <p className="text-xs text-amber-800">{pp.aiDisclaimer}</p>
         </div>
       </div>
 
