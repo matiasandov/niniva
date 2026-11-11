@@ -53,12 +53,24 @@ The combined-data work is best understood as **multi-source, multi-feature
 research**, not as a single neural network that fuses raw audio and patient
 records. The PD-versus-healthy experiment compares Istanbul-only training
 with an Istanbul experiment augmented by Oxford PD recordings. Its shared
-Tier A inputs are 13 acoustic voice features, including jitter, shimmer, and
-noise/harmonics measures. Diagnosis is the classification target; UPDRS
-scores and severity fields support other analyses and should not be assumed
-to be inputs to this classifier. The combined dataset also contains further
-acoustic measurements and clinical fields, with provenance flags for
-imputed values; those columns are not all used in every experiment.
+Tier A inputs are 13 numerical measurements derived from each voice
+recording:
+
+- **Jitter (pitch-period variation):** `Jitter(%)`, `Jitter(Abs)`,
+  `Jitter:RAP`, `Jitter:PPQ5`, and `Jitter:DDP`.
+- **Shimmer (voice-amplitude variation):** `Shimmer`, `Shimmer(dB)`,
+  `Shimmer:APQ3`, `Shimmer:APQ5`, `Shimmer:APQ11`, and `Shimmer:DDA`.
+- **Voice noise/tonality:** `NHR` (noise-to-harmonics ratio) and `HNR`
+  (harmonics-to-noise ratio).
+
+Each row represents a recording's extracted acoustic features, not raw audio.
+The target is the binary diagnosis/status label. Oxford contributes
+Parkinson's recordings only, as additional positive-class training data; it
+does not add healthy controls. UPDRS scores, severity fields, demographics,
+and other acoustic columns in the combined dataset are not inputs to this
+particular 13-feature comparison. The dataset includes other measurements
+and clinical fields for separate analyses, some with provenance flags for
+imputed values.
 
 The training scripts compare classical machine-learning approaches such as
 logistic regression, SVM, random forest, XGBoost, LightGBM, K-nearest
