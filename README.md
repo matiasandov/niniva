@@ -67,6 +67,33 @@ from the same person together when evaluating a model, reducing the risk that
 the evaluation benefits from seeing that person's other recordings during
 training.
 
+### Reported experiment results
+
+The strongest reported Parkinson's classification result is from the
+Istanbul + Oxford-augmented comparison: **XGBoost** had a pooled subject-level
+AUC of **0.740**, with mean subject-level accuracy of **0.675** and F1 of
+**0.708**. The best Istanbul-only result by pooled subject-level AUC in that
+comparison was **SVM-RBF** at **0.720**. These are cross-validation results,
+not independent external validation. The experiment also measured a
+source-detection AUC of **1.000**, indicating substantial differences between
+the Istanbul and Oxford data; the augmented result should therefore be
+interpreted cautiously. Although XGBoost won the augmented-track comparison,
+the script's final saved classifier is refit on Istanbul-only data.
+
+A separate saved Istanbul-only evaluation reports a different ranking:
+**XGBoost** had the highest pooled AUC (**0.710**), while **KNN** had the
+highest F1 (**0.709**). Logistic regression and LightGBM had the highest mean
+accuracy (**0.675**, tied). These results are from a different evaluation
+artifact and should not be combined with the augmented comparison as if they
+were one leaderboard.
+
+For the non-Parkinson's audio tasks, the saved Tiny-CRNN wakeword evaluation
+reports **97.4% accuracy** and **0.993 ROC-AUC** on 1,441 test samples. The
+saved UrbanSound8K sound-event evaluation reports **70.0% accuracy** and
+**90.2% top-3 accuracy** on 837 samples. These audio-classification results
+measure different tasks and datasets, so they are not comparable to the
+Parkinson's classification metrics.
+
 Saved artifacts and evaluation outputs are under
 [`parkinson_detection_models/saved_models/`](./parkinson_detection_models/saved_models/)
 and [`parkinson_detection_models/results/`](./parkinson_detection_models/results/).
