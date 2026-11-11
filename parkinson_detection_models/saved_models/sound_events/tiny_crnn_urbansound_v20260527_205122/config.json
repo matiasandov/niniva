@@ -1,0 +1,61 @@
+{
+    "sample_rate": 22050,
+    "clip_seconds": 4.0,
+    "n_mels": 64,
+    "n_frames": 200,
+    "conv_channels": [
+        64,
+        64,
+        128
+    ],
+    "gru_hidden": 128,
+    "fc_hidden": 128,
+    "use_attention": true,
+    "num_classes": 10,
+    "batch_size": 128,
+    "learning_rate": 0.001,
+    "epochs": 60,
+    "patience": 8,
+    "train_folds": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+    ],
+    "val_folds": [
+        9
+    ],
+    "test_folds": [
+        10
+    ],
+    "use_class_weights": true,
+    "class_names": [
+        "air_conditioner",
+        "car_horn",
+        "children_playing",
+        "dog_bark",
+        "drilling",
+        "engine_idling",
+        "gun_shot",
+        "jackhammer",
+        "siren",
+        "street_music"
+    ],
+    "class_weights": [
+        0.8847500085830688,
+        1.9445054531097412,
+        0.8847500085830688,
+        0.8847500085830688,
+        0.8847500085830688,
+        0.8652811646461487,
+        2.2758841514587402,
+        0.8621193766593933,
+        0.9264397621154785,
+        0.8847500085830688
+    ],
+    "num_parameters": 1040842
+}

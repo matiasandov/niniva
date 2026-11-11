@@ -1,0 +1,8 @@
+{
+    "test_samples": 1441,
+    "accuracy": 0.974323386537127,
+    "roc_auc": 0.9929183338463118,
+    "target_miss_rate": 0.15,
+    "optimal_threshold": 0.9905939102172852,
+    "false_accepts": 3
+}

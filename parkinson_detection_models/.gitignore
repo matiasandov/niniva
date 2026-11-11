@@ -1,0 +1,25 @@
+.venv/
+
+# =========================
+# Machine Learning / Data
+# =========================
+# Ignore massive model weights and datasets
+*.pt
+*.pth
+*.h5
+*.onnx
+*.safetensors
+
+# Ignore audio files (but include data directory)
+*.mp3
+*.wav
+*.flac
+*.ogg
+*.m4a
+*.aac
+*.wma
+*.opus
+*.cd
+
+# Include data directory (so it's tracked in git)
+!data/

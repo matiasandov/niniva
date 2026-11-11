@@ -1,0 +1,314 @@
+{
+  "dataset": "Parkinson's Speech with Multiple Types of Sound Recordings",
+  "source": "https://archive.ics.uci.edu/dataset/301/parkinson+speech+dataset+with+multiple+types+of+sound+recordings",
+  "citation": "Kursun, O., Sakar, B., Isenkul, M., Sakar, C., Sertbas, A., & Gurgen, F. (2013). UCI Machine Learning Repository. https://doi.org/10.24432/C5NC8M",
+  "notes": {
+    "train_samples_per_subject": 26,
+    "train_subjects": "20 Parkinson's patients + 20 healthy subjects",
+    "test_samples_per_subject": 6,
+    "test_subjects": "28 Parkinson's patients",
+    "test_file_difference": "Test file has no UPDRS column (col 28 becomes class label directly)"
+  },
+  "columns": [
+    {
+      "col_index": 1,
+      "col_name": "subject_id",
+      "display_name": "Subject ID",
+      "group": "identifier",
+      "dtype": "int",
+      "unit": null,
+      "description": "Unique identifier for each subject (patient or healthy individual)",
+      "use_as_feature": false
+    },
+    {
+      "col_index": 2,
+      "col_name": "jitter_local",
+      "display_name": "Jitter (Local)",
+      "group": "jitter",
+      "dtype": "float",
+      "unit": "%",
+      "description": "Cycle-to-cycle variation in fundamental frequency as a percentage of the average period",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 3,
+      "col_name": "jitter_local_abs",
+      "display_name": "Jitter (Local, Absolute)",
+      "group": "jitter",
+      "dtype": "float",
+      "unit": "seconds",
+      "description": "Absolute cycle-to-cycle variation in fundamental frequency in seconds",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 4,
+      "col_name": "jitter_rap",
+      "display_name": "Jitter (RAP)",
+      "group": "jitter",
+      "dtype": "float",
+      "unit": "%",
+      "description": "Relative Average Perturbation — average perturbation over 3 consecutive periods",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 5,
+      "col_name": "jitter_ppq5",
+      "display_name": "Jitter (PPQ5)",
+      "group": "jitter",
+      "dtype": "float",
+      "unit": "%",
+      "description": "5-point Period Perturbation Quotient — smoothed jitter over 5 consecutive periods",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 6,
+      "col_name": "jitter_ddp",
+      "display_name": "Jitter (DDP)",
+      "group": "jitter",
+      "dtype": "float",
+      "unit": "%",
+      "description": "Average absolute difference between consecutive period differences; equals RAP × 3",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 7,
+      "col_name": "shimmer_local",
+      "display_name": "Shimmer (Local)",
+      "group": "shimmer",
+      "dtype": "float",
+      "unit": "%",
+      "description": "Cycle-to-cycle variation in vocal amplitude as a percentage",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 8,
+      "col_name": "shimmer_local_db",
+      "display_name": "Shimmer (Local, dB)",
+      "group": "shimmer",
+      "dtype": "float",
+      "unit": "dB",
+      "description": "Cycle-to-cycle variation in vocal amplitude expressed in decibels",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 9,
+      "col_name": "shimmer_apq3",
+      "display_name": "Shimmer (APQ3)",
+      "group": "shimmer",
+      "dtype": "float",
+      "unit": "%",
+      "description": "3-point Amplitude Perturbation Quotient — smoothed shimmer over 3 consecutive periods",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 10,
+      "col_name": "shimmer_apq5",
+      "display_name": "Shimmer (APQ5)",
+      "group": "shimmer",
+      "dtype": "float",
+      "unit": "%",
+      "description": "5-point Amplitude Perturbation Quotient — smoothed shimmer over 5 consecutive periods",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 11,
+      "col_name": "shimmer_apq11",
+      "display_name": "Shimmer (APQ11)",
+      "group": "shimmer",
+      "dtype": "float",
+      "unit": "%",
+      "description": "11-point Amplitude Perturbation Quotient — smoothed shimmer over 11 consecutive periods",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 12,
+      "col_name": "shimmer_dda",
+      "display_name": "Shimmer (DDA)",
+      "group": "shimmer",
+      "dtype": "float",
+      "unit": "%",
+      "description": "Average absolute difference between consecutive amplitude differences; equals APQ3 × 3",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 13,
+      "col_name": "ac",
+      "display_name": "AC (Autocorrelation)",
+      "group": "harmonics",
+      "dtype": "float",
+      "unit": null,
+      "description": "Degree of periodicity/regularity in the voice signal; ranges 0–1, higher means more regular",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 14,
+      "col_name": "nth",
+      "display_name": "NTH (Noise-to-Harmonics Ratio)",
+      "group": "harmonics",
+      "dtype": "float",
+      "unit": null,
+      "description": "Ratio of noise energy to harmonic energy; higher value means noisier, less tonal voice",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 15,
+      "col_name": "htn",
+      "display_name": "HTN (Harmonics-to-Noise Ratio)",
+      "group": "harmonics",
+      "dtype": "float",
+      "unit": "dB",
+      "description": "Ratio of harmonic energy to noise energy; higher value means cleaner, more harmonic voice",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 16,
+      "col_name": "pitch_median",
+      "display_name": "Median Pitch",
+      "group": "pitch",
+      "dtype": "float",
+      "unit": "Hz",
+      "description": "Median fundamental frequency (F0) across the voice recording",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 17,
+      "col_name": "pitch_mean",
+      "display_name": "Mean Pitch",
+      "group": "pitch",
+      "dtype": "float",
+      "unit": "Hz",
+      "description": "Mean fundamental frequency (F0) across the voice recording",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 18,
+      "col_name": "pitch_std",
+      "display_name": "Pitch Std Deviation",
+      "group": "pitch",
+      "dtype": "float",
+      "unit": "Hz",
+      "description": "Standard deviation of fundamental frequency — how much pitch fluctuates",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 19,
+      "col_name": "pitch_min",
+      "display_name": "Minimum Pitch",
+      "group": "pitch",
+      "dtype": "float",
+      "unit": "Hz",
+      "description": "Lowest fundamental frequency detected in the recording",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 20,
+      "col_name": "pitch_max",
+      "display_name": "Maximum Pitch",
+      "group": "pitch",
+      "dtype": "float",
+      "unit": "Hz",
+      "description": "Highest fundamental frequency detected in the recording",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 21,
+      "col_name": "num_pulses",
+      "display_name": "Number of Pulses",
+      "group": "pulse",
+      "dtype": "int",
+      "unit": "count",
+      "description": "Total number of glottal pulses detected in the voice recording",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 22,
+      "col_name": "num_periods",
+      "display_name": "Number of Periods",
+      "group": "pulse",
+      "dtype": "int",
+      "unit": "count",
+      "description": "Total number of vocal periods; typically num_pulses minus 1",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 23,
+      "col_name": "mean_period",
+      "display_name": "Mean Period",
+      "group": "pulse",
+      "dtype": "float",
+      "unit": "seconds",
+      "description": "Average duration of one vocal cycle (inverse of mean pitch frequency)",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 24,
+      "col_name": "std_period",
+      "display_name": "Std Deviation of Period",
+      "group": "pulse",
+      "dtype": "float",
+      "unit": "seconds",
+      "description": "Standard deviation of vocal period duration — variability in cycle length",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 25,
+      "col_name": "unvoiced_frames_frac",
+      "display_name": "Fraction of Locally Unvoiced Frames",
+      "group": "voice_breaks",
+      "dtype": "float",
+      "unit": "%",
+      "description": "Percentage of frames in the recording where the voice is detected as unvoiced",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 26,
+      "col_name": "num_voice_breaks",
+      "display_name": "Number of Voice Breaks",
+      "group": "voice_breaks",
+      "dtype": "int",
+      "unit": "count",
+      "description": "Count of complete interruptions in voicing during the recording",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 27,
+      "col_name": "degree_voice_breaks",
+      "display_name": "Degree of Voice Breaks",
+      "group": "voice_breaks",
+      "dtype": "float",
+      "unit": "%",
+      "description": "Total duration of voice breaks as a percentage of the total signal duration",
+      "use_as_feature": true
+    },
+    {
+      "col_index": 28,
+      "col_name": "updrs",
+      "display_name": "UPDRS Score",
+      "group": "target",
+      "dtype": "int",
+      "unit": "score",
+      "description": "Unified Parkinson's Disease Rating Scale score assigned by a physician; 0 for healthy subjects. Use as regression target. NOT present in test file.",
+      "use_as_feature": false,
+      "train_only": true
+    },
+    {
+      "col_index": 29,
+      "col_name": "class_label",
+      "display_name": "Class Label",
+      "group": "target",
+      "dtype": "int",
+      "unit": null,
+      "description": "Binary classification target: 1 = Parkinson's patient, 0 = healthy subject",
+      "use_as_feature": false,
+      "values": { "0": "healthy", "1": "parkinson" }
+    }
+  ],
+  "feature_groups": {
+    "jitter":       { "col_indices": [2, 3, 4, 5, 6],            "description": "Frequency perturbation measures" },
+    "shimmer":      { "col_indices": [7, 8, 9, 10, 11, 12],      "description": "Amplitude perturbation measures" },
+    "harmonics":    { "col_indices": [13, 14, 15],               "description": "Noise-to-harmonics and autocorrelation measures" },
+    "pitch":        { "col_indices": [16, 17, 18, 19, 20],       "description": "Fundamental frequency statistics" },
+    "pulse":        { "col_indices": [21, 22, 23, 24],           "description": "Glottal pulse and period statistics" },
+    "voice_breaks": { "col_indices": [25, 26, 27],               "description": "Voicing continuity measures" }
+  }
+}

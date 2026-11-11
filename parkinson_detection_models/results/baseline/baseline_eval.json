@@ -1,0 +1,10 @@
+{
+    "model_type": "cnn14_base_audioset",
+    "benchmarks": {
+        "disk_size_mb": 312.26,
+        "avg_inference_time_ms": 94.24,
+        "peak_system_ram_mb": 1349.43,
+        "peak_gpu_vram_mb": 0.0
+    },
+    "samples_evaluated": 100
+}
