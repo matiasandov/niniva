@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./assets/niniva-logo.svg" alt="Niniva logo" width="88" height="88">
+</p>
+
 # Niniva
 
 Niniva brings together a clinician-facing neurologist assistant app and a

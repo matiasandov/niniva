@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title">
+  <title id="title">Niniva</title>
+  <rect width="96" height="96" rx="24" fill="#0f766e"/>
+  <path
+    d="M25 62h15l8-16 11 30 9-20 5 6h8"
+    fill="none"
+    stroke="#fff"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="6"
+  />
+</svg>
